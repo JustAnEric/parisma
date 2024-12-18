@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Router Devices</title>
+    <script src="/static/js/extensions/tailwind.js"></script>
+
+    <style>
+    aside nav ul li a {
+        align-items: center;
+        gap: 4px;
+    }
+
+    main header {
+        margin-bottom: 175px;
+        padding-top: 10px;
+        color: white;
+    }
+
+    .vanta-canvas {
+        border-radius: 12px;
+    }
+
+    .bold {
+        font-weight: 800;
+    }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-900">
+    <!-- Sidebar -->
+    <div class="flex h-screen">
+        <aside class="w-64 bg-gray-800 text-white flex flex-col">
+            <div class="p-4 text-lg font-bold border-b border-gray-700">Pawrisma Dashboard</div>
+            <nav class="flex-1">
+                <ul class="space-y-2 p-4">
+                    <li><a href="home" class="flex p-2 rounded hover:bg-gray-700"><img src="/static/svg/home.svg" alt="home.svg" width="28px">Home</a></li>
+                    <li><a href="devices" class="flex p-2 rounded hover:bg-gray-700"><img src="/static/svg/devices.svg" alt="devices.svg" width="28px">Devices</a></li>
+                    <li><a href="network" class="flex p-2 rounded hover:bg-gray-700"><img src="/static/svg/network.svg" alt="network.svg" width="28px">Network</a></li>
+                    <li><a href="statistics" class="flex p-2 rounded hover:bg-gray-700"><img src="/static/svg/statistics.svg" alt="statistics.svg" width="28px">Statistics</a></li>
+                    <li><a href="settings" class="flex p-2 rounded hover:bg-gray-700"><img src="/static/svg/settings.svg" alt="settings.svg" width="28px">Settings</a></li>
+                    <hr>
+                    <small class="fg-gray-700 bold">OTHER</small>
+                    <li><a href="content-blocking" class="flex p-2 rounded hover:bg-gray-700"><img src="/static/svg/settings.svg" alt="settings.svg" width="28px">Content Blocking</a></li>
+                    <li><a href="captive-portal" class="flex p-2 rounded hover:bg-gray-700"><img src="/static/svg/settings.svg" alt="settings.svg" width="28px">Captive Portal</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 p-6">
+            <header class="flex justify-between items-center">
+                <h1 class="text-2xl font-semibold">Settings</h1>
+                <button class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 save-changes">Save All Changes</button>
+            </header>
+
+            <section class="mt-8 bg-white shadow rounded-lg p-6">
+                <h2 class="text-lg font-bold mb-4">General Settings</h2>
+                <form class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Router Name</label>
+                        <input type="text" class="mt-1 block w-full p-2 border border-gray-300 rounded" title="Router Name" placeholder="Router Name" name="ROUTER_NAME" value="{{ data['ROUTER_NAME'] }}">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Admin Password</label>
+                        <input type="password" class="mt-1 block w-full p-2 border border-gray-300 rounded" title="Admin Password" placeholder="Admin Password" name="ADMIN_PASSWORD" value="{{ data['ADMIN_PASSWORD'] }}">
+                    </div>
+                    <button type="submit" title="Save" class="p-2 bg-blue-500 text-white hover:bg-blue-700 general-save-changes">Save Changes</button>
+                </form>
+            </section>
+
+            <section class="mt-8 bg-white shadow rounded-lg p-6">
+                <h2 class="text-lg font-bold mb-4">Wi-Fi Settings</h2>
+                <form class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">SSID</label>
+                        <input type="text" class="mt-1 block w-full p-2 border border-gray-300 rounded" title="Wi-Fi SSID" placeholder="SSID" name="SSID" value="{{ data['SSID'] }}">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Security</label>
+                        <select class="mt-1 block w-full p-2 border border-gray-300 rounded" title="Security Options" name="SECURITY" value="{{ data['SECURITY'] }}">
+                            <option value="WPA2">WPA2</option>
+                            <option value="WPA3">WPA3</option>
+                            <option value="OPEN">Open</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Password</label>
+                        <input type="password" class="mt-1 block w-full p-2 border border-gray-300 rounded" title="Wi-Fi Password" placeholder="Password" name="PASSWORD" value="{{ data['PASSWORD'] }}">
+                    </div>
+                    <button type="submit" title="Save" class="p-2 bg-blue-500 text-white hover:bg-blue-700 wifi-save-changes">Save Changes</button>
+                </form>
+            </section>
+
+            <section class="mt-8 bg-white shadow rounded-lg p-6">
+                <h2 class="text-lg font-bold mb-4">Advanced Settings</h2>
+                <form class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">LAN IP Address</label>
+                        <input type="text" class="mt-1 block w-full p-2 border border-gray-300 rounded" value="{{ data['LAN_IP_ADDRESS'] or '192.168.0.1' }}" title="LAN IP" placeholder="LAN IP Address" name="LAN_IP_ADDRESS">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">DHCP Range</label>
+                        <div class="flex space-x-2">
+                            <input type="text" class="mt-1 block w-full p-2 border border-gray-300 rounded" placeholder="Start" value="{{ data['DHCP_RANGE_1'] or '192.168.0.100' }}" name="DHCP_RANGE_1">
+                            <input type="text" class="mt-1 block w-full p-2 border border-gray-300 rounded" placeholder="End" value="{{ data['DHCP_RANGE_1'] or '192.168.0.200' }}" name="DHCP_RANGE_2">
+                        </div>
+                    </div>
+                    <button type="submit" title="Save" class="p-2 bg-blue-500 text-white hover:bg-blue-700 advanced-save-changes">Save Changes</button>
+                </form>
+            </section>
+        </main>
+    </div>
+
+    <script src="/static/js/extensions/three.r134.min.js"></script>
+    <script src="/static/js/extensions/vanta.cells.min.js"></script>
+    <script type="module" src="/static/js/Router.js"></script>
+</body>
+</html>

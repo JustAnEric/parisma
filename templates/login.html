@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Router Log in | 🐾Pawrisma</title>
+    <script src="/static/js/extensions/tailwind.js"></script>
+
+    <style>
+    form {
+        width: 100%;
+    }
+
+    body .container {
+        margin-top: 100px;
+    }
+
+    button {
+        width: fit-content;
+    }
+    </style>
+</head>
+<body class="bg-gray-800 text-black">
+    <div class="container mx-auto p-6 rounded shadow bg-white">
+        <h1 class="text-4xl mb-4">Pawrisma | 🐾Log in</h1>
+        <div class="flex">
+            <form action="/router/login/finish" class="flex flex-col" method="POST">
+                <label for="username">Username</label>
+                <input type="text" name="username" id="username" title="Username" placeholder="Username" class="p-2 text-black">
+                <label for="password">Password</label>
+                <input type="password" name="password" id="password" title="Password" placeholder="Password" class="p-2 text-black">
+                <button type="submit" title="Submit" class="p-2 bg-blue-500 text-white hover:bg-blue-700">Log in</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Router Devices</title>
+    <script src="/static/js/extensions/tailwind.js"></script>
+
+    <style>
+    aside nav ul li a {
+        align-items: center;
+        gap: 4px;
+    }
+
+    main header {
+        margin-bottom: 175px;
+        padding-top: 10px;
+        color: white;
+    }
+
+    .vanta-canvas {
+        border-radius: 12px;
+    }
+
+    .bold {
+        font-weight: 800;
+    }
+
+    ul.radio-list li {
+        gap: 6px;
+    }
+
+    tr input, tr button {
+        width: 100%;
+        outline: none;
+    }
+
+    #toast-success, #toast-warning, #toast-danger {
+        position: fixed;
+        bottom: 40px;
+        right: 20px;
+    }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-900">
+    <!-- Sidebar -->
+    <div class="flex h-screen">
+        <aside class="w-64 bg-gray-800 text-white flex flex-col">
+            <div class="p-4 text-lg font-bold border-b border-gray-700">Pawrisma Dashboard</div>
+            <nav class="flex-1">
+                <ul class="space-y-2 p-4">
+                    <li><a href="home" class="flex p-2 rounded hover:bg-gray-700"><img src="/static/svg/home.svg" alt="home.svg" width="28px">Home</a></li>
+                    <li><a href="devices" class="flex p-2 rounded hover:bg-gray-700"><img src="/static/svg/devices.svg" alt="devices.svg" width="28px">Devices</a></li>
+                    <li><a href="network" class="flex p-2 rounded hover:bg-gray-700"><img src="/static/svg/network.svg" alt="network.svg" width="28px">Network</a></li>
+                    <li><a href="statistics" class="flex p-2 rounded hover:bg-gray-700"><img src="/static/svg/statistics.svg" alt="statistics.svg" width="28px">Statistics</a></li>
+                    <li><a href="settings" class="flex p-2 rounded hover:bg-gray-700"><img src="/static/svg/settings.svg" alt="settings.svg" width="28px">Settings</a></li>
+                    <hr>
+                    <small class="fg-gray-700 bold">OTHER</small>
+                    <li><a href="content-blocking" class="flex p-2 rounded hover:bg-gray-700"><img src="/static/svg/settings.svg" alt="settings.svg" width="28px">Content Blocking</a></li>
+                    <li><a href="captive-portal" class="flex p-2 rounded hover:bg-gray-700"><img src="/static/svg/settings.svg" alt="settings.svg" width="28px">Captive Portal</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 p-6">
+            <header class="flex justify-between items-center">
+                <h1 class="text-2xl font-semibold">Content Blocking</h1>
+                <button class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700" onclick="location.refresh();">Refresh</button>
+            </header>
+
+            <section class="mt-8 bg-white shadow rounded-lg p-6">
+                <h2 class="text-lg font-bold mb-4">Block Directive</h2>
+                <ul class="radio-list">
+                    <li class="flex">
+                        <input type="radio" name="block-directive" id="block-directive-blocklist" checked disabled>
+                        <label for="block-directive-blocklist">Block via a blocklist</label>
+                    </li>
+                    <li class="flex">
+                        <input type="radio" name="block-directive" id="block-directive-allowlist" disabled>
+                        <label for="block-directive-allowlist">Block via an allowlist</label>
+                    </li>
+                </ul>
+            </section>
+
+            <section class="mt-8 bg-white shadow rounded-lg p-6">
+                <h2 class="text-lg font-bold mb-4">List</h2>
+                <div class="flex">
+                    <table class="w-full border-collapse border border-gray-300">
+                        <thead>
+                            <tr class="bg-gray-800">
+                                <th class="p-2 text-center text-white" colspan="3">Alter Domain Rules</th>
+                            </tr>
+                            <tr class="bg-gray-100">
+                                <th class="p-2 text-left border border-gray-300">Domain Rule</th>
+                                <th class="p-2 text-left border border-gray-300">MAC Address</th>
+                                <th class="p-2 text-left border border-gray-300">And add your record!</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="form">
+                                <td class="p-2 border border-gray-300"><input type="text" name="domain-rule" id="domain-rule" placeholder="Insert your domain rule here" title="Domain Rule" width="100%"></td>
+                                <td class="p-2 border border-gray-300"><input type="text" name="mac-addresses" id="mac-addresses" placeholder="Insert MAC addresses here separated by commas" title="MAC Addresses" width="100%"></td>
+                                <td class="p-2 border border-gray-300"><button type="button" title="Add New Rule" width="100%" class="add-new-rule">Add</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <br/>
+                <div class="overflow-x-auto">
+                    <table class="w-full border-collapse border border-gray-300">
+                        <thead>
+                            <tr class="bg-gray-100">
+                                <th class="border border-gray-300 p-2 text-left">Domain Rule</th>
+                                <th class="border border-gray-300 p-2 text-left">MAC Address</th>
+                                <th class="border border-gray-300 p-2 text-left">Status (active, disabled)</th>
+                                <th class="border border-gray-300 p-2 text-left">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!--<tr>
+                                <td class="border border-gray-300 p-2">google.com</td>
+                                <td class="border border-gray-300 p-2">00:1A:2B:3C:4D:5E</td>
+                                <td class="border border-gray-300 p-2">Active</td>
+                            </tr>
+                            <tr>
+                                <td class="border border-gray-300 p-2">www.google.com</td>
+                                <td class="border border-gray-300 p-2">00:1A:2B:3C:4D:5E</td>
+                                <td class="border border-gray-300 p-2">Active</td>
+                            </tr>
+                            -->
+                            {% for blk in blocks %}
+
+                            <tr data-id="{{ blocks[blk]['ID'] }}">
+                                <td class="border border-gray-300 p-2">{{ blk }}</td>
+                                <td class="border border-gray-300 p-2">{{ blocks[blk]['mac_addresses']|join(', ') }}</td>
+                                <td class="border border-gray-300 p-2">{% if blocks[blk]['status'] == True %}Active{% else %}Disabled{% endif %}</td>
+                                <td class="border border-gray-300 p-2"><button type="button" class="text-red delete-button" title="Delete">Delete</button></td>
+                            </tr>
+
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {{ blocks }}
+            </section>
+        </main>
+    </div>
+
+    <script src="/static/js/extensions/three.r134.min.js"></script>
+    <script src="/static/js/extensions/vanta.globe.min.js"></script>
+    <script type="module" src="/static/js/Router.js"></script>
+</body>
+</html>

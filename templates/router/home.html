@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Router Dashboard</title>
+    <script src="/static/js/extensions/tailwind.js"></script>
+
+    <style>
+    aside nav ul li a {
+        align-items: center;
+        gap: 4px;
+    }
+
+    main header {
+        margin-bottom: 175px;
+        padding-top: 10px;
+        color: white;
+    }
+
+    .vanta-canvas {
+        border-radius: 12px;
+    }
+
+    .bold {
+        font-weight: 800;
+    }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-900">
+    <!-- Sidebar -->
+    <div class="flex h-screen">
+        <aside class="w-64 bg-gray-800 text-white flex flex-col">
+            <div class="p-4 text-lg font-bold border-b border-gray-700">Pawrisma Dashboard</div>
+            <nav class="flex-1">
+                <ul class="space-y-2 p-4">
+                    <li><a href="home" class="flex p-2 rounded hover:bg-gray-700"><img src="/static/svg/home.svg" alt="home.svg" width="28px">Home</a></li>
+                    <li><a href="devices" class="flex p-2 rounded hover:bg-gray-700"><img src="/static/svg/devices.svg" alt="devices.svg" width="28px">Devices</a></li>
+                    <li><a href="network" class="flex p-2 rounded hover:bg-gray-700"><img src="/static/svg/network.svg" alt="network.svg" width="28px">Network</a></li>
+                    <li><a href="statistics" class="flex p-2 rounded hover:bg-gray-700"><img src="/static/svg/statistics.svg" alt="statistics.svg" width="28px">Statistics</a></li>
+                    <li><a href="settings" class="flex p-2 rounded hover:bg-gray-700"><img src="/static/svg/settings.svg" alt="settings.svg" width="28px">Settings</a></li>
+                    <hr>
+                    <small class="fg-gray-700 bold">OTHER</small>
+                    <li><a href="content-blocking" class="flex p-2 rounded hover:bg-gray-700"><img src="/static/svg/settings.svg" alt="settings.svg" width="28px">Content Blocking</a></li>
+                    <li><a href="captive-portal" class="flex p-2 rounded hover:bg-gray-700"><img src="/static/svg/settings.svg" alt="settings.svg" width="28px">Captive Portal</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 p-2">
+            <header class="flex justify-between items-center">
+                <h1 class="text-2xl font-semibold">Welcome to the Router Dashboard, Eric</h1>
+                <button class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Logout</button>
+            </header>
+
+            <section class="mt-6 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 p-6">
+                <!-- Card Example -->
+                <div class="bg-white shadow rounded-lg p-6">
+                    <h2 class="text-lg font-bold mb-2">Total Devices</h2>
+                    <p class="text-3xl font-semibold">15</p>
+                </div>
+
+                <div class="bg-white shadow rounded-lg p-6">
+                    <h2 class="text-lg font-bold mb-2">Active Connections</h2>
+                    <p class="text-3xl font-semibold">27</p>
+                </div>
+
+                <div class="bg-white shadow rounded-lg p-6">
+                    <h2 class="text-lg font-bold mb-2">Download Speed</h2>
+                    <p class="text-3xl font-semibold">125 Mbps</p>
+                </div>
+
+                <div class="bg-white shadow rounded-lg p-6">
+                    <h2 class="text-lg font-bold mb-2">Upload Speed</h2>
+                    <p class="text-3xl font-semibold">50 Mbps</p>
+                </div>
+            </section>
+
+            <section class="mt-8 bg-white shadow rounded-lg p-6">
+                <h2 class="text-lg font-bold mb-4">Network Activity</h2>
+                <div class="overflow-x-auto">
+                    <table class="w-full border-collapse border border-gray-300">
+                        <thead>
+                            <tr class="bg-gray-100">
+                                <th class="border border-gray-300 p-2 text-left">Device</th>
+                                <th class="border border-gray-300 p-2 text-left">IP Address</th>
+                                <th class="border border-gray-300 p-2 text-left">Status</th>
+                                <th class="border border-gray-300 p-2 text-left">Usage</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="border border-gray-300 p-2">Laptop</td>
+                                <td class="border border-gray-300 p-2">192.168.0.101</td>
+                                <td class="border border-gray-300 p-2">Active</td>
+                                <td class="border border-gray-300 p-2">5 GB</td>
+                            </tr>
+                            <tr>
+                                <td class="border border-gray-300 p-2">Smartphone</td>
+                                <td class="border border-gray-300 p-2">192.168.0.102</td>
+                                <td class="border border-gray-300 p-2">Idle</td>
+                                <td class="border border-gray-300 p-2">1 GB</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="/static/js/extensions/three.r134.min.js"></script>
+    <script src="/static/js/extensions/vanta.rings.min.js"></script>
+    <script type="module" src="/static/js/Router.js"></script>
+</body>
+</html>

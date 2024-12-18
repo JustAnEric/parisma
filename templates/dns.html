@@ -1,0 +1,79 @@
+<html lang="en">
+<head>
+    <title>DNS Stats</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <script src="/static/js/extensions/tailwind.js"></script>
+</head>
+<body class="bg-gray-800 text-white">
+    <div class="container mx-auto p-6">
+        <h1 class="text-4xl mb-4">DNS Stats</h1>
+        <p id="server_message" class="text-xl mb-4">automatically updating</p>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="p-4 bg-gray-700 rounded-lg shadow-md">
+                <h2 class="text-xl">Total Requests</h2>
+                <p id="total_requests" class="text-2xl">{{dns['total_reqs']}}</p>
+            </div>
+            <div class="p-4 bg-gray-700 rounded-lg shadow-md">
+                <h2 class="text-xl">Bytes Transferred (doesn't include DNS status)</h2>
+                <p id="bytes_transferred" class="text-2xl">{{dns['bytes_transferred']}}</p>
+            </div>
+            <div class="p-4 bg-gray-700 rounded-lg shadow-md">
+                <h2 class="text-xl">DNS Server</h2>
+                <p id="dns_server" class="text-2xl">{{dns['server']}}</p>
+            </div>
+            <div class="p-4 bg-gray-700 rounded-lg shadow-md">
+                <h2 class="text-xl">Latency</h2>
+                <p id="latency" class="text-2xl">{{dns['latency']}}</p>
+            </div>
+            <div class="p-4 bg-gray-700 rounded-lg shadow-md">
+                <h2 class="text-xl">Clients Connected</h2>
+                <p id="clients_amount" class="text-2xl">{{dns['clients_contacted']|length}} | {{dns['clients_contacted']}}</p>
+            </div>
+            <div class="p-4 bg-gray-700 rounded-lg shadow-md" data-action="disable_requests">
+                <h2 class="text-xl">Disable all Requests</h2>
+                <p id="disable_requests" class="text-2xl">Click me if you want to disable all requests to the outside DNS</p>
+            </div>
+            <div class="p-4 bg-gray-700 rounded-lg shadow-md" data-action="disable_dns_switching">
+                <h2 class="text-xl">Disable DNS Switching</h2>
+                <p id="disable_serverswitching" class="text-2xl">Click me if you want to disable DNS switching (not recommended)</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+<script>
+    setInterval(async()=>{
+        // auto update stats
+        const f = await fetch('/api/info/statistics/dns', {method: 'GET'});
+        const current_dns_stats = await f.json();
+
+        document.getElementById('total_requests').innerText = current_dns_stats.total_reqs;
+        document.getElementById('dns_server').innerText = current_dns_stats.server;
+        document.getElementById('latency').innerText = current_dns_stats.latency;
+        document.getElementById('bytes_transferred').innerText = current_dns_stats.bytes_transferred;
+        document.getElementById('clients_amount').innerText = `${current_dns_stats.clients_contacted.length} | ${current_dns_stats.clients_contacted}`;
+    },1000);
+
+    document.querySelector('div[data-action="disable_requests"]').addEventListener('click', async()=>{
+        await fetch('/api/info/dns/disable_requests', {method: 'POST'});
+        document.getElementById('disable_requests').innerText = 'Click me if you want to enable all requests to the outside DNS';
+        document.querySelector('div[data-action="disable_requests"]').querySelector('h2').innerText = "Enable all Requests";
+    });
+
+    document.querySelector('div[data-action="disable_dns_switching"]').addEventListener('click', async()=>{
+        await fetch('/api/info/dns/disable_dns_switching', {method: 'POST'});
+        document.getElementById('disable_serverswitching').innerText = 'Click me if you want to enable DNS switching (recommended)';
+        document.querySelector('div[data-action="disable_dns_switching"]').querySelector('h2').innerText = "Enable DNS Switching";
+    });
+</script>
+<style>
+div[data-action="disable_requests"] {
+    cursor: pointer;
+    color: red;
+}
+div[data-action="disable_dns_switching"] {
+    cursor: pointer;
+    color: orange;
+}
+</style>

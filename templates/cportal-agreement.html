@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CPortal Agreement | 🐾Pawrisma</title>
+    <script src="/static/js/extensions/tailwind.js"></script>
+
+    <style>
+    form {
+        width: 100%;
+    }
+
+    body .container {
+        margin-top: 100px;
+    }
+
+    button {
+        width: fit-content;
+    }
+    </style>
+</head>
+<body class="bg-gray-800 text-black">
+    <div class="container mx-auto p-6 rounded shadow bg-white">
+        <h1 class="text-4xl mb-4">Pawrisma | 🐾Log on to Network > Agreement</h1>
+        <div class="flex">
+            <form action="/login/finish" class="flex flex-col" method="POST">
+                <textarea id="tos" title="Terms and Conditions | Network Agreement" readonly disabled>{{ tos_content }}</textarea>
+                <input type="checkbox" name="agreed" id="agreed" title="I agree to the terms and conditions" class="p-2 text-black">
+                <label for="agreed">I agree to the terms and conditions</label>
+                <button type="submit" title="Connect" class="p-2 bg-blue-500 text-white hover:bg-blue-700">Connect</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
