@@ -1,6 +1,6 @@
 """
 
-HostBase Router program for the Raspberry Pi 1.
+Parisma Router program.
 Initialization expected on boot.
 
 """
@@ -12,6 +12,7 @@ from hbdns import main
 from flask import render_template, redirect, request, session
 from werkzeug.routing import Rule
 from datetime import datetime, timezone
+from getpass import getpass
 import os, flask, threading, ssl, subprocess, platform, getmac, time, uuid, json, bcrypt, smtplib
 
 sessions = []
@@ -106,10 +107,54 @@ def deauth_client(mac_address, interface="wlan0"):
     except Exception as e:
         print(f"Error sending deauthentication packet: {e}")
 
-c = settings()
-c.load_to_env()
+#c = settings()
+#c.load_to_env()
+
+def setup():
+    print("----------------------------------------------------------------")
+    print("PARISMA ROUTER CONFIGURATION | START")
+    a = input("Do you want to configure the router now? [Y/n] ")
+    setup_allowed = False
+    
+    if a.lower().strip() == "y" or a.lower().strip() == "":
+        print("Entering setup mode...")
+        setup_allowed = True
+    else: 
+        print("Exiting setup mode...")
+        setup_allowed = False
+    print("----------------------------------------------------------------")
+    
+    if not setup_allowed:
+        return "NOT_ALLOWED"
+    
+    print("INPUT::setup.ROUTER NAME")
+    router_name = input("Enter your router name: ").strip()
+    main.BUFFERS['ROUTER_NAME'] = router_name
+    print("INPUT::setup.ADMIN PASSWORD")
+    admin_password = getpass("Enter your admin password: ")
+    main.BUFFERS['ADMIN_PASSWORD'] = admin_password
+    print("INPUT::setup.WIFI SSID")
+    ssid = input("Enter your Wi-Fi SSID: ")
+    main.BUFFERS['SSID'] = ssid
+    print("INPUT::setup.WIFI PASSWORD")
+    wifi_password = getpass("Enter your Wi-Fi password: ")
+    main.BUFFERS['PASSWORD'] = wifi_password
+    
+    print("SETUP FINISH")
+    print("SETUP WRITE")
+    with open('./settings.json', 'w') as fp:
+        json.dump(main.BUFFERS, fp, indent=4)
+    print("SETUP FINAL")
+    print("SETUP DONE")
+    print("----------------------------------------------------------------")
+    return "ALLOWED"
 
 def startup():
+    if main.BUFFERS.get('ROUTER_NAME', None) == None:
+        # Go through Setup
+        print('startup()- starting setup')
+        setup()
+    
     if platform.system().lower() == "linux":
         print('startup()- starting iptables rules')
         
@@ -456,7 +501,7 @@ def get_buffers(id, method):
     
     if id.lower() == "content_blocks":
         if method == "get":
-            return {'buffers': main.BUFFERS[id.upper()]}
+            return {'buffers': main.BUFFERS.get(id.upper(),{})}
         elif method == "add":
             buffer = request.headers.get('buffer',None)
             if not buffer:
@@ -464,6 +509,9 @@ def get_buffers(id, method):
             
             b = json.loads(buffer)
             b['ID'] = str(uuid.uuid4())
+            
+            if main.BUFFERS.get(id.upper(),None) == None:
+                main.BUFFERS[id.upper()] = []
             
             main.BUFFERS[id.upper()].append(b)
             # write
@@ -477,6 +525,9 @@ def get_buffers(id, method):
             buffer = request.headers.get('buffer-id',None)
             if not buffer:
                 return {'error': 'No buffer selection specified'}
+            
+            if main.BUFFERS.get(id.upper(),None) == None:
+                return {'error': 'No buffer'}
             
             for index,buf in enumerate(main.BUFFERS[id.upper()]):
                 if buf['ID'] == buffer:
@@ -520,7 +571,7 @@ def captive_portal_users():
         pass
     
     else:
-        for user in main.BUFFERS['CAPTIVE_PORTAL_USERS']:
+        for user in main.BUFFERS.get('CAPTIVE_PORTAL_USERS',[]):
             if max is not None and Convertable(int, max):
                 if len(users) >= int(max):
                     break
@@ -546,7 +597,7 @@ def delete_captive_portal_user():
     if id is None or Convertable(str, id) is False:
         return {'error': 'No user ID specified'}
     
-    for index, user in enumerate(main.BUFFERS['CAPTIVE_PORTAL_USERS']):
+    for index, user in enumerate(main.BUFFERS.get('CAPTIVE_PORTAL_USERS',[])):
         if user['ID'] == id:
             main.BUFFERS['CAPTIVE_PORTAL_USERS'].pop(index)
             break
@@ -570,11 +621,14 @@ def add_captive_portal_user():
     if not username or not password:
         return {'error': 'No username and password specified'}
     
-    for user in main.BUFFERS['CAPTIVE_PORTAL_USERS']:
+    for user in main.BUFFERS.get('CAPTIVE_PORTAL_USERS',[]):
         if user['name'].lower() == username.lower():
             return {'error': 'Username already exists'}
     
     id = str(uuid.uuid4())
+    
+    if main.BUFFERS.get('CAPTIVE_PORTAL_USERS', None) == None:
+        main.BUFFERS['CAPTIVE_PORTAL_USERS'] = []
     
     main.BUFFERS['CAPTIVE_PORTAL_USERS'].append({
         'name': str(username),
@@ -600,7 +654,7 @@ def update_captive_portal_user():
     if id is None or Convertable(str, id) is False:
         return {'error': 'No user ID specified'}
     
-    for user in main.BUFFERS['CAPTIVE_PORTAL_USERS']:
+    for user in main.BUFFERS.get('CAPTIVE_PORTAL_USERS',[]):
         if user['ID'] == id:
             user['mac_history'] = []
             break
@@ -620,7 +674,7 @@ def loginpage():
     
     mac = main.STATS['clients_mac_address'].get(request.remote_addr, None)
     
-    for user in main.BUFFERS['CAPTIVE_PORTAL_USERS']:
+    for user in main.BUFFERS.get('CAPTIVE_PORTAL_USERS',[]):
         if user['mac_assigned'] == mac:
             print(f"user '{user['name']}' is already assigned to this MAC address")
             return "ERROR: You are already logged in with the same identifier."
@@ -638,7 +692,7 @@ def loginagreement():
     
     mac = main.STATS['clients_mac_address'].get(request.remote_addr, None)
     
-    for user in main.BUFFERS['CAPTIVE_PORTAL_USERS']:
+    for user in main.BUFFERS.get('CAPTIVE_PORTAL_USERS',[]):
         if user['mac_assigned'] == mac:
             print(f"user '{user['name']}' is already assigned to this MAC address")
             return "ERROR: You are already logged in with the same identifier."
@@ -650,7 +704,7 @@ def loginagreement():
     login_correct = False
     user = None
     
-    for user in main.BUFFERS['CAPTIVE_PORTAL_USERS']:
+    for user in main.BUFFERS.get('CAPTIVE_PORTAL_USERS',[]):
         if user['name'] == username.lower():
             user_exists = True
             if user['password'] == password:
@@ -687,7 +741,7 @@ def loginfinish():
     
     mac = main.STATS['clients_mac_address'].get(request.remote_addr, None)
     
-    for user in main.BUFFERS['CAPTIVE_PORTAL_USERS']:
+    for user in main.BUFFERS.get('CAPTIVE_PORTAL_USERS',[]):
         if user['mac_assigned'] == mac:
             print(f"user '{user['name']}' is already assigned to this MAC address")
             return "ERROR: You are already logged in with the same identifier."
@@ -700,7 +754,7 @@ def loginfinish():
         login_correct = False
         user = None
         
-        for user in main.BUFFERS['CAPTIVE_PORTAL_USERS']:
+        for user in main.BUFFERS.get('CAPTIVE_PORTAL_USERS',[]):
             if user['name'] == username.lower():
                 user_exists = True
                 if user['password'] == password:
@@ -754,7 +808,7 @@ def loginfinish():
         login_correct = False
         user = None
         
-        for user in main.BUFFERS['CAPTIVE_PORTAL_USERS']:
+        for user in main.BUFFERS.get('CAPTIVE_PORTAL_USERS',[]):
             if user['name'] == username.lower():
                 user_exists = True
                 if user['password'] == password:
@@ -768,7 +822,7 @@ def loginfinish():
             
             if not mac in user['mac_history']:
                 if len(user['mac_history']) > 0:
-                    if main.BUFFERS['CAPTIVE_PORTAL_MODE'].lower() == 'strict':
+                    if main.BUFFERS.get('CAPTIVE_PORTAL_MODE','Standard').lower() == 'strict':
                         return "ERROR: Logging in from an unknown device. Please contact your network administrator."
                     
                 user['mac_history'].append(mac)

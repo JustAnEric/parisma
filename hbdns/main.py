@@ -4,12 +4,15 @@ from concurrent.futures import ThreadPoolExecutor
 from getmac import get_mac_address
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
-import socket as sock, threading, time, platform, subprocess, re, json, smtplib, base64
+import socket as sock, threading, time, platform, subprocess, re, json, smtplib, base64, os.path
 
 DNS_HOST = "127.0.0.1"
 DNS_PORT = 53  # DNS default port
 
-BUFFERS = json.load(open('./settings.json'))
+if os.path.exists("settings.json"):
+    BUFFERS = json.load(open('./settings.json'))
+else:
+    BUFFERS = {}
 
 # Custom DNS mapping
 # Add custom records here, for example add a custom record which blocks a request.
@@ -67,7 +70,7 @@ def parse_new_blocked_websites_from_buffers():
     # Update blocked websites from buffers.json
     global BLOCKED_WEBSITES, BUFFERS
     BLOCKED_WEBSITES = {}
-    for b1 in BUFFERS['CONTENT_BLOCKS']:
+    for b1 in BUFFERS.get('CONTENT_BLOCKS',[]):
         BLOCKED_WEBSITES[f"{b1['query']}{'.'if(not b1['query'].endswith('.'))else''}"] = {
             "name": f"{b1['query']}",
             "mac_addresses": b1['macs'],

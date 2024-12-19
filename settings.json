@@ -1,27 +1,6 @@
 {
-    "ROUTER_NAME": "MyRouter",
+    "ROUTER_NAME": "router",
     "ADMIN_PASSWORD": "password",
-    "SSID": "MyNetwork",
-    "SECURITY": "WPA2",
-    "PASSWORD": "ericmuzyk2",
-    "LAN_IP_ADDRESS": "192.168.0.1",
-    "DHCP_RANGE_1": "192.168.0.100",
-    "DHCP_RANGE_2": "192.168.0.200",
-    "CAPTIVE_PORTAL_ENABLED": false,
-    "CONTENT_BLOCKS": [],
-    "CAPTIVE_PORTAL_USERS": [
-        {
-            "name": "eric",
-            "password": "pwned",
-            "mac_history": [
-                "4c:03:4f:a4:71:4e"
-            ],
-            "mac_assigned": "4c:03:4f:a4:71:4e",
-            "status": true,
-            "ID": "bfe034bf-52fc-45ab-a7ab-ab5cce0f6o1"
-        }
-    ],
-    "CAPTIVE_PORTAL_MODE": "Strict",
-    "CAPTIVE_PORTAL_REQUIRES_AGREEMENT": true,
-    "CAPTIVE_PORTAL_NETWORK_AGREEMENT": "Connecting to this computer network constitutes agreement to the terms and conditions outlined below. If you do not agree to the terms and conditions, you must immediately disconnect from this network. The owner and operator of this computer network provides no warrantees, neither express nor implied, of any right to privacy or other such privileges through the use of this computer network by the user. If a court rules any part of this agreement unlawful, this shall not constitute a nullification of the remainder of this agreement.\n\nTerms and Conditions\n\n1. The owner and operator (\"Owner\") of this computer network (\"the Service\") reserves the right to discontinue the Service at any time."
+    "SSID": "parismawifi",
+    "PASSWORD": "parismasecure"
 }
